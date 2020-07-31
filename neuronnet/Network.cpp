@@ -199,7 +199,7 @@ void Network::calculateTurn()
 	delete[] b;
 }
 
-void Network::Learn(Matrix learn,Matrix* w,Matrix* b)//funkcj cost to jednak cos innego xd
+void Network::Learn(Matrix learn,Matrix* w,Matrix* b)
 {
 	Matrix* y = new Matrix[LAYERS_NUM];//matrix with desirable value of each neuron
 	y[OUTPUT].setSize(1,OUT_SIZE);
