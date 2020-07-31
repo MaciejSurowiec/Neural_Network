@@ -247,12 +247,10 @@ void Network::calculate(int loops)
 {
 	for (int i = 0; i < loops; i++)
 	{
-		calculateTurn();
-
-		//save function to check test examples
-		//save();
+		calculateTurn();	
 	}
-
+	//save function to check test examples
+	//save();
 	std::cout << results / (LOOP * loops)*100.0f;
 }
 
