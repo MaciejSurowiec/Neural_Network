@@ -25,9 +25,10 @@ protected:
 	Input input;
 	void calculateTurn();
 	int results;
+	bool enableExtendedOutput;
 
 public:
-	Network();
+	Network(bool enableExtendedOutput);
 	void save();
 	void createNewNetwork();
 	bool load();

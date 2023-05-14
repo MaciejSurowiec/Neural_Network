@@ -1,10 +1,11 @@
 #include "Network.h"
 
-Network::Network()
+Network::Network(bool enableExtendedOutput) : 
+	enableExtendedOutput(enableExtendedOutput)
 {
 	results = 0;
 	layers = new Layer[LAYERS_NUM];
-	layers[INPUT].setLayer(WIDTH * HEIGHT);//wejscie
+	layers[INPUT].setLayer(WIDTH * HEIGHT);//input
 	
 	//creating layers and neurons in them
 	///////////////////////////////////////////////////////
@@ -16,15 +17,15 @@ Network::Network()
 
 	layers[OUTPUT].setLayer(OUT_SIZE);
 
-	//connecting neighbors neurons
+	//connecting neighbor neurons
 	////////////////////////////////////////////////////////
 
 	for (int i = 0; i < LAYERS_NUM; i++)
 	{
 		Layer* r = NULL;
 		Layer* l = NULL;
-		if (i + 1  < LAYERS_NUM)r = layers+(i+1);
-		if (i - 1 >= 0)l = layers + (i - 1);
+		if (i + 1  < LAYERS_NUM)r = layers + i + 1;
+		if (i - 1 >= 0)l = layers + i - 1;
 
 		layers[i].connectLayers(r,l);
 	}
@@ -34,7 +35,7 @@ Network::Network()
 		layers[i].setNeurons();
 	}
 
-	//loading net values or creating random net when theres no file
+	//loading net values or creating random net when there's no file
 	///////////////////////////////////////////////////////
 	if (!load()) createNewNetwork();
 }
@@ -101,7 +102,7 @@ void Network::save()
 			
 			double b = layers[i].getLayer()[j]->getBias();
 
-			config <<b <<' ';
+			config << b << ' ';
 
 			for (int k = 0; k < layers[i - 1].getSize(); k++)
 			{
@@ -127,7 +128,7 @@ void Network::calculateTurn()
 	}
 	//w[layer][previous neuron][actual neuron]
 
-	Matrix* b;//temporary matrix for biases
+	Matrix* b; //temporary matrix for biases
 	b = new Matrix[LAYERS_NUM];
 	b[OUTPUT].setSize(1, HIDDEN_SIZE);
 	for (int i = OUTPUT; i > 0; i--)
@@ -156,19 +157,24 @@ void Network::calculateTurn()
 			}
 		}
 
-		in->Print();
+		if (enableExtendedOutput)
+		{
+			in->Print();
+		}
 		int result=0;
 		double temp = 0.0f;
 		for (int i = 0; i < OUT_SIZE; i++)//searching for most activated neuron
 		{
-			
 			if (layers[OUTPUT].getLayer()[i]->getValue() > temp)
 			{
 				result = i;
 				temp = layers[OUTPUT].getLayer()[i]->getValue();
 			}
 
-			std::cout << i << ": " << layers[OUTPUT].getLayer()[i]->getValue() << std::endl;
+			if (enableExtendedOutput)
+			{
+				std::cout << i << ": " << layers[OUTPUT].getLayer()[i]->getValue() << std::endl;
+			}
 		}
 
 		if (in->getLabel()[0][result] == 1)results++;
@@ -178,7 +184,7 @@ void Network::calculateTurn()
 			cost += pow(layers[OUTPUT].getLayer()[k]->getValue() - in->getLabel()[0][k], 2);
 		}
 
-		//learinng function off to check test examples
+		//learinng function turned off to check test examples
 		//Learn(in->getLabel(),w,b);
 	}
 	//std::cout << cost << std::endl;
@@ -201,7 +207,7 @@ void Network::calculateTurn()
 
 void Network::Learn(Matrix learn,Matrix* w,Matrix* b)
 {
-	Matrix* y = new Matrix[LAYERS_NUM];//matrix with desirable value of each neuron
+	Matrix* y = new Matrix[LAYERS_NUM];//matrix with desirable values of each neuron
 	y[OUTPUT].setSize(1,OUT_SIZE);
 
 	for (int i = INPUT+1; i < OUTPUT; i++)
@@ -251,7 +257,7 @@ void Network::calculate(int loops)
 	}
 	//save function to check test examples
 	//save();
-	std::cout << results / (LOOP * loops)*100.0f;
+	std::cout << "correctness rate: " << results / (LOOP * loops) * 100.0f << "%";
 }
 
 Network::~Network()
