@@ -1,3 +1,0 @@
-﻿  Network.cpp
-C:\Users\suruw\Downloads\Neural_Network-master\Neural_Network-master\neuronnet\Network.cpp(82,12): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-  neuronnet.vcxproj -> C:\Users\suruw\Downloads\Neural_Network-master\Neural_Network-master\neuronnet\Debug\neuronnet.exe
