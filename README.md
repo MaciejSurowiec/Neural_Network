@@ -2,6 +2,7 @@
 
 ## Table of contents
 * [General info](#general-info)
+* [Technologies](#technologies)
 * [Network architecture](#Network-architecture)
 * [Usage](#Usage)
 * [Results](#Results)
@@ -43,9 +44,9 @@ If extended output is chosen program will display this for every test sample:
 - visual representation of that sample
 - probability for each possible label
 
-####Example output:
+#### Example output:
 
-![example output](https://raw.github.com/MaciejSurowiec/Neural_Network/main/output_example.PNG)
+![example output](https://raw.github.com/MaciejSurowiec/Neural_Network/master/output_example.PNG)
 
 ### Batches
 Testing database contains 10,000 different samples, each testing batch contains 100 random samples. 
