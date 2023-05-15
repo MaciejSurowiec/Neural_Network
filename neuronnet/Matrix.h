@@ -1,9 +1,9 @@
 #pragma once
-#include <math.h>
+#include <numbers>
 
 class Matrix
 {
-protected:
+private:
 	int size_x;
 	int size_y;
 	double** matrix;
@@ -11,7 +11,7 @@ protected:
 public:
 
 	Matrix(int size_x, int size_y);
-	Matrix(double** mat,int& size_x,int& size_y);
+	Matrix(double** mat, int size_x, int size_y);
 	Matrix(const Matrix& other);
 	Matrix();
 
@@ -20,20 +20,20 @@ public:
 	void operator-=(const Matrix& other);
 	double* operator[](int indeks);
 
-	Matrix& square();
+	Matrix& Square();
 
-	bool checkSize(Matrix& other);
-	bool checkSize(int& x,int& y);
+	bool CheckSize(Matrix& other);
+	bool CheckSize(int x, int y);
 
-	void set(double value, int x, int y);
-	void set(double** values, int& x, int& y);
-	void add(double value, int x, int y);
-	void setSize(int x, int y);
+	void Set(double value, int x, int y);
+	void Set(double** values, int x, int y);
+	void Add(double value, int x, int y);
+	void SetSize(int x, int y);
 
-	double& get(int x, int y) const;
+	double& Get(int x, int y) const;
 
-	int& getSizeX();
-	int& getSizeY();
+	int GetSizeX();
+	int GetSizeY();
 	~Matrix();
 
 

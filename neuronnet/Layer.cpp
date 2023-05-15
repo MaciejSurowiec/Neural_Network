@@ -2,9 +2,9 @@
 
 Layer::Layer()
 {
-	nextLayer = NULL;
-	prevLayer = NULL;
-	layer = NULL;
+	nextLayer = nullptr;
+	prevLayer = nullptr;
+	layer = nullptr;
 }
 
 Neuron* Layer::operator[](int indeks)
@@ -12,48 +12,49 @@ Neuron* Layer::operator[](int indeks)
 	return layer[indeks];
 }
 
-void Layer::setLayer(int s)
+void Layer::SetLayer(int s)
 {
 	size = s;
 	layer = new Neuron * [size];
 }
 
-void Layer::connectLayers( Layer* nextL, Layer* prevL)
+void Layer::ConnectLayers( Layer* nextL, Layer* prevL)
 {
 	nextLayer = nextL;
 	prevLayer = prevL;
 }
 
-void Layer::setNeurons()
+void Layer::SetNeurons()
 {
 	for (int i = 0; i < size; i++)
 	{
-		int n = 0, p = 0;
+		int n{ 0 }, p{ 0 };
 
-		if(nextLayer!=NULL)n = nextLayer->getSize();
-		if(prevLayer!=NULL)p = prevLayer->getSize();
+		if(nextLayer != nullptr) n = nextLayer->GetSize();
+		if(prevLayer != nullptr) p = prevLayer->GetSize();
 
-		layer[i] = new Neuron(p,n);
+		layer[i] = new Neuron(p, n);
 		
-		Neuron** next = NULL,**prev=NULL;
-		if(nextLayer!=NULL)next= nextLayer->getLayer();
+		Neuron** next = nullptr, **prev = nullptr;
+		if(nextLayer != nullptr) next = nextLayer->GetLayer();
 
-		if(prevLayer!=NULL)prev= prevLayer->getLayer();
+		if(prevLayer != nullptr) prev = prevLayer->GetLayer();
 
-		layer[i]->setConnection(prev, next);
+		layer[i]->SetConnection(prev, next);
 	}
 }
 
-int Layer::getSize() { return size; }
+int Layer::GetSize() { return size; }
 
-Neuron** Layer::getLayer() { return layer; }
+Neuron** Layer::GetLayer() { return layer; }
+
 void Layer::Print()
 {
-	if (prevLayer != NULL)std::cout <<'p'<< prevLayer->getSize()<<' ';
-	std::cout <<'t'<< size << ' ';
-	if(nextLayer!=NULL)std::cout <<'n'<< nextLayer->getSize();
+	if (prevLayer != nullptr) std::cout << 'p' << prevLayer->GetSize() << ' ';
+	std::cout << 't' << size << ' ';
+	if(nextLayer!= nullptr) std::cout << 'n' << nextLayer->GetSize();
 	
-	std::cout<<std::endl;
+	std::cout << std::endl;
 }
 
 Layer::~Layer()

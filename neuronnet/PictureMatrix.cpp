@@ -3,47 +3,44 @@
 
 PictureMatrix::PictureMatrix(double** pix, int lab)
 {
-	size_x = WIDTH;
-	size_y = HEIGHT;
-	image.set(pix,size_x,size_y);
+	image.Set(pix, size, size);
 
-	label.setSize(1,10);
+	label.SetSize(1, 10);
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (i == lab)label.set(1, 0, i);
-		else label.set(0, 0, i);
+		if (i == lab) label.Set(1.0f, 0, i);
+		else label.Set(0.0f, 0, i);
 	}
 }
 
-Matrix PictureMatrix::getLabel() { return label; }
+Matrix PictureMatrix::GetLabel() { return label; }
 
-Matrix& PictureMatrix::getImage() { return image; }
+Matrix& PictureMatrix::GetImage() { return image; }
 
 void PictureMatrix::Print()
 {
-	printLabel();
-	for (int i=0;i<size_y;i++)
+	PrintLabel();
+	for (int i = 0; i < size; i++)
 	{
-		for (int j=0;j<size_x;j++)
+		for (int j = 0; j < size; j++)
 		{
-			if (image.get(j, i) > 0.8)std::cout << '#';
-			else if (image.get(j, i) > 0.5)std::cout << '*';
+			if (image.Get(j, i) > 0.8) std::cout << '#';
+			else if (image.Get(j, i) > 0.5) std::cout << '*';
 			else std::cout << ' ';
 		}
 		std::cout << std::endl;
 	}
 }
 
-
-void PictureMatrix::printLabel()
+void PictureMatrix::PrintLabel()
 {
-	int lab = 0;
-
 	for (int i = 0; i < 10; i++)
 	{
-		if (label[0][i] == 1)lab = i;
+		if (label[0][i] == 1)
+		{
+			std::cout << i << std::endl;
+			break;
+		}
 	}
-
-	std::cout << lab << std::endl;
 }

@@ -5,25 +5,21 @@
 
 class Layer
 {
-protected:
+private:
 	int size;
 	Neuron** layer;
-
-public:
 	Layer* nextLayer;
 	Layer* prevLayer;
 
-	Layer();
-
+public:
 	Neuron* operator[](int indeks);
 
-	void setLayer(int s);
-	void connectLayers(Layer* nextL, Layer* prevL);
-
-	void setNeurons();
-
-	int getSize();
-	Neuron** getLayer();
+	Layer();
+	void SetLayer(int s);
+	void ConnectLayers(Layer* nextL, Layer* prevL);
+	void SetNeurons();
+	int GetSize();
+	Neuron** GetLayer();
 	void Print();
 	~Layer();
 };

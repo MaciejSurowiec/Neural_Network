@@ -1,12 +1,11 @@
 #ifndef NEURON_H
 #define NEURON_H
 #include <iostream>
-#include <cmath>
-#define OFFSET 100
+#include <numbers>
 
 class Neuron
 {
-protected:
+private:
 
 	Neuron** nextNeurons;
 	Neuron** prevNeurons;
@@ -15,24 +14,26 @@ protected:
 	double value;
 	int prevLayerSize;
 	int nextLayerSize;
-	double zn;
+	double zValue;
+	static constexpr int offset{ 100 };
+	double* StringToDouble(std::string& line, int offset, int n);
+
 public:
 	
 	Neuron(int prevLayerSize,int nextLayersize);
-	void setConnection(Neuron** prevLayer,Neuron** nextLayer);
-	void setNeuron(double* w, double& b);
-	void setNeuron(std::string wb);
-	double getWeight(int i);
-	double getBias();
-	double getValue();
-	void calculateValue();
-	void setValue(double d);
-	void addToBias(double val);
-	void addToWeight(double val,int indeks);
-	void randomSet();
+	void SetConnection(Neuron** prevLayer, Neuron** nextLayer);
+	void SetNeuron(double* w, double& b);
+	void SetNeuron(std::string wb);
+	double GetWeight(int i);
+	double GetBias();
+	double GetValue();
+	void CalculateValue();
+	void SetValue(double d);
+	void AddToBias(double val);
+	void AddToWeight(double val, int indeks);
+	void RandomSet();
 	void Print();
-	double getZ();
+	double GetZValue();
 	~Neuron();
 };
-static double eul = std::exp(1);
 #endif

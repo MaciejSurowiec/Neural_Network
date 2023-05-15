@@ -1,20 +1,19 @@
 #pragma once
 #include <iostream>
 #include "Matrix.h"
-#define WIDTH 28
-#define HEIGHT 28
 
 class PictureMatrix
 {
 	Matrix image;
 	Matrix label;
-	int size_x;
-	int size_y;
-	void printLabel();
+
+	void PrintLabel();
 public:
+	static constexpr int size{ 28 };
+
 	PictureMatrix(double** pix, int label);
-	Matrix& getImage();
-	Matrix getLabel();
+	Matrix& GetImage();
+	Matrix GetLabel();
 
 	void Print();
 

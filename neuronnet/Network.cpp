@@ -4,45 +4,45 @@ Network::Network(bool enableExtendedOutput) :
 	enableExtendedOutput(enableExtendedOutput)
 {
 	results = 0;
-	layers = new Layer[LAYERS_NUM];
-	layers[INPUT].setLayer(WIDTH * HEIGHT);//input
+	layers = new Layer[networkSize];
+	layers[inputLayer].SetLayer(pow(PictureMatrix::size, 2));//input
 	
 	//creating layers and neurons in them
 	///////////////////////////////////////////////////////
-	int i = INPUT + 1;
-	for (i; i < OUTPUT; i++)
+	int i{ inputLayer + 1 };
+	for (i; i < outputLayer; i++)
 	{
-		layers[i].setLayer(HIDDEN_SIZE);
+		layers[i].SetLayer(hiddenLayerSize);
 	}
 
-	layers[OUTPUT].setLayer(OUT_SIZE);
+	layers[outputLayer].SetLayer(outputSize);
 
 	//connecting neighbor neurons
 	////////////////////////////////////////////////////////
 
-	for (int i = 0; i < LAYERS_NUM; i++)
+	for (int i = 0; i < networkSize; i++)
 	{
-		Layer* r = NULL;
-		Layer* l = NULL;
-		if (i + 1  < LAYERS_NUM)r = layers + i + 1;
-		if (i - 1 >= 0)l = layers + i - 1;
+		Layer* r = nullptr;
+		Layer* l = nullptr;
+		if (i + 1  < networkSize) r = layers + i + 1;
+		if (i - 1 >= 0) l = layers + i - 1;
 
-		layers[i].connectLayers(r,l);
+		layers[i].ConnectLayers(r, l);
 	}
 
-	for (int i = 0; i < LAYERS_NUM; i++)
+	for (int i = 0; i < networkSize; i++)
 	{
-		layers[i].setNeurons();
+		layers[i].SetNeurons();
 	}
 
 	//loading net values or creating random net when there's no file
 	///////////////////////////////////////////////////////
-	if (!load()) createNewNetwork();
+	if (!Load()) CreateNewNetwork();
 }
 
-bool fileExist()
+bool Network::isFileExist()
 {
-	std::ifstream f(PATH);
+	std::ifstream f(pathToConfig);
 	if (f.is_open())
 	{
 		f.close();
@@ -51,20 +51,20 @@ bool fileExist()
 	else return false;
 }
 
-bool Network::load()
+bool Network::Load()
 {
-	if (fileExist()) 
+	if (isFileExist()) 
 	{
-		std::ifstream con(PATH);
-		config.open(PATH, std::ios_base::in);
-		for (int i = 1; i < LAYERS_NUM; i++)
+		std::ifstream con(pathToConfig);
+		config.open(pathToConfig, std::ios_base::in);
+		for (int i = 1; i < networkSize; i++)
 		{
-			for (int j = 0; j < layers[i].getSize(); j++)
+			for (int j = 0; j < layers[i].GetSize(); j++)
 			{
 				std::string line;
 				getline(config, line);
 
-				layers[i].getLayer()[j]->setNeuron(line);
+				layers[i].GetLayer()[j]->SetNeuron(line);
 			}
 		}
 
@@ -76,39 +76,38 @@ bool Network::load()
 	return false;
 }
 
-void Network::createNewNetwork()
+void Network::CreateNewNetwork()
 {
-	time_t t;
+	time_t t{};
 	srand(time(&t));
 
-	for(int i=1;i < LAYERS_NUM;i++)
+	for(int i=1; i < networkSize; i++)
 	{
-		for (int j = 0; j < layers[i].getSize(); j++)
+		for (int j = 0; j < layers[i].GetSize(); j++)
 		{
-			layers[i].getLayer()[j]->randomSet();
+			layers[i].GetLayer()[j]->RandomSet();
 		}
 	}
 
-	save();
+	Save();
 }
 
-void Network::save()
+void Network::Save()
 {
-	config.open(PATH,std::ios_base::out);
-	for (int i = 1; i < LAYERS_NUM; i++)//Input layer doesnt need weights or biases
+	config.open(pathToConfig, std::ios_base::out);
+	for (int i = 1; i < networkSize; i++)//Input layer doesnt need weights or biases
 	{
-		for (int j = 0; j < layers[i].getSize(); j++)
+		for (int j = 0; j < layers[i].GetSize(); j++)
 		{
-			
-			double b = layers[i].getLayer()[j]->getBias();
+			double bias{ layers[i].GetLayer()[j]->GetBias() };
 
-			config << b << ' ';
+			config << bias << ' ';
 
-			for (int k = 0; k < layers[i - 1].getSize(); k++)
+			for (int k = 0; k < layers[i - 1].GetSize(); k++)
 			{
-				double w = layers[i].getLayer()[j]->getWeight(k);
+				double weight{ layers[i].GetLayer()[j]->GetWeight(k) };
 
-				config <<  w<< ' ';
+				config << weight << ' ';
 			}
 
 			config << std::endl;
@@ -117,43 +116,40 @@ void Network::save()
 	config.close();
 }
 
-void Network::calculateTurn()
+void Network::CalculateTurn()
 {
-	double cost = 0;
-	Matrix* w;//temporary matrix for weights
-	w = new Matrix[LAYERS_NUM];
-	for (int i = OUTPUT; i > 0; i--)
+	double cost{ 0 };
+	Matrix* tempWeights = new Matrix[networkSize];
+	for (int i = outputLayer; i > 0; i--)
 	{
-		w[i].setSize(layers[i - 1].getSize(), layers[i].getSize());
+		tempWeights[i].SetSize(layers[i - 1].GetSize(), layers[i].GetSize());
 	}
 	//w[layer][previous neuron][actual neuron]
 
-	Matrix* b; //temporary matrix for biases
-	b = new Matrix[LAYERS_NUM];
-	b[OUTPUT].setSize(1, HIDDEN_SIZE);
-	for (int i = OUTPUT; i > 0; i--)
+	Matrix* tempBias = new Matrix[networkSize];
+	tempBias[outputLayer].SetSize(1, hiddenLayerSize);
+	for (int i = outputLayer; i > 0; i--)
 	{
-		b[i].setSize(1, layers[i - 1].getSize());
+		tempBias[i].SetSize(1, layers[i - 1].GetSize());
 	}
 
-	for (int i = 0; i < LOOP; i++)
+	for (int i = 0; i < batchSize; i++)
 	{
-		PictureMatrix* in = getPicture();
+		PictureMatrix* in = GetPicture();
 
-		//geting input
-		for (int i = 0; i < HEIGHT; i++)
+		for (int i = 0; i < PictureMatrix::size; i++)
 		{
-			for (int j = 0; j < WIDTH; j++)
+			for (int j = 0; j < PictureMatrix::size; j++)
 			{
-				layers[INPUT].getLayer()[j + (i * HEIGHT)]->setValue(in->getImage()[j][i]);
+				layers[inputLayer].GetLayer()[j + (i * PictureMatrix::size)]->SetValue(in->GetImage()[j][i]);
 			}
 		}
 
-		for (int i = 1; i < LAYERS_NUM; i++)
+		for (int i = 1; i < networkSize; i++)
 		{
-			for (int j = 0; j < layers[i].getSize(); j++)
+			for (int j = 0; j < layers[i].GetSize(); j++)
 			{
-				layers[i].getLayer()[j]->calculateValue();
+				layers[i].GetLayer()[j]->CalculateValue();
 			}
 		}
 
@@ -161,103 +157,104 @@ void Network::calculateTurn()
 		{
 			in->Print();
 		}
-		int result=0;
-		double temp = 0.0f;
-		for (int i = 0; i < OUT_SIZE; i++)//searching for most activated neuron
+
+		int result{ 0 };
+		double temp{ 0 };
+
+		for (int i = 0; i < outputSize; i++)//searching for most activated neuron
 		{
-			if (layers[OUTPUT].getLayer()[i]->getValue() > temp)
+			if (layers[outputLayer].GetLayer()[i]->GetValue() > temp)
 			{
 				result = i;
-				temp = layers[OUTPUT].getLayer()[i]->getValue();
+				temp = layers[outputLayer].GetLayer()[i]->GetValue();
 			}
 
 			if (enableExtendedOutput)
 			{
-				std::cout << i << ": " << layers[OUTPUT].getLayer()[i]->getValue() << std::endl;
+				std::cout << i << ": " << layers[outputLayer].GetLayer()[i]->GetValue() << std::endl;
 			}
 		}
 
-		if (in->getLabel()[0][result] == 1)results++;
+		if (in->GetLabel()[0][result] == 1) results++;
 
-		for (int k = 0; k < layers[OUTPUT].getSize(); k++)
+		for (int k = 0; k < layers[outputLayer].GetSize(); k++)
 		{
-			cost += pow(layers[OUTPUT].getLayer()[k]->getValue() - in->getLabel()[0][k], 2);
+			cost += pow(layers[outputLayer].GetLayer()[k]->GetValue() - in->GetLabel()[0][k], 2);
 		}
 
 		//learinng function turned off to check test examples
 		//Learn(in->getLabel(),w,b);
 	}
 	//std::cout << cost << std::endl;
-	for (int i = 1; i < LAYERS_NUM; i++)
+	for (int i = 1; i < networkSize; i++)
 	{
-		for (int k = 0; k < layers[i].getSize(); k++)
+		for (int k = 0; k < layers[i].GetSize(); k++)
 		{
-			for (int j = 0; j < layers[i - 1].getSize(); j++)
+			for (int j = 0; j < layers[i - 1].GetSize(); j++)
 			{
-				layers[i].getLayer()[k]->addToWeight(w[i][j][k]/LOOP, j);
+				layers[i].GetLayer()[k]->AddToWeight(tempWeights[i][j][k] / batchSize, j);
 			}
 
-			layers[i].getLayer()[k]->addToBias(b[i][0][k]/LOOP);
+			layers[i].GetLayer()[k]->AddToBias(tempBias[i][0][k] / batchSize);
 		}
 	}
 
-	delete[] w;
-	delete[] b;
+	delete[] tempBias;
+	delete[] tempWeights;
 }
 
-void Network::Learn(Matrix learn,Matrix* w,Matrix* b)
+void Network::Learn(Matrix learn, Matrix* w, Matrix* b)
 {
-	Matrix* y = new Matrix[LAYERS_NUM];//matrix with desirable values of each neuron
-	y[OUTPUT].setSize(1,OUT_SIZE);
+	Matrix* neuronsValues = new Matrix[networkSize]; //matrix with desirable values of each neuron
+	neuronsValues[outputLayer].SetSize(1, outputSize);
 
-	for (int i = INPUT+1; i < OUTPUT; i++)
+	for (int i = inputLayer + 1; i < outputLayer; i++)
 	{
-		y[i].setSize(1, HIDDEN_SIZE);
+		neuronsValues[i].SetSize(1, hiddenLayerSize);
 	}
 
-	for (int i = 0; i < OUT_SIZE;i++)
+	for (int i = 0; i < outputSize; i++)
 	{
-		y[OUTPUT].set(2.0f*(layers[OUTPUT].getLayer()[i]->getValue()-learn[0][i]), 0, i);
+		neuronsValues[outputLayer].Set(2.0f * (layers[outputLayer].
+			GetLayer()[i]->GetValue() - learn[0][i]), 0, i);
 	}
 
-	//b[layer][0][actual neuron]
-
-	for (int i = OUTPUT; i >0; i--)//going backwards through net
+	for (int i = outputLayer; i >0; i--) //going backwards through net
 	{
-		for (int k = 0; k < layers[i].getSize(); k++)
+		for (int k = 0; k < layers[i].GetSize(); k++)
 		{
-			double z = layers[i].getLayer()[k]->getZ();
-			double g = (pow(eul, -1.0f * z)) / (pow((1 + pow(eul, -1.0f * z)), 2));
-			double f = y[i][0][k];
-			b[i].add(-1.0f * (f * g), 0, k);
+			double z{ layers[i].GetLayer()[k]->GetZValue() };
+			double g{ (pow(std::numbers::e, -1.0f * z)) / (pow((1 + pow(std::numbers::e, -1.0f * z)), 2)) };
+			double f{ neuronsValues[i][0][k] };
+			b[i].Add(-1.0f * (f * g), 0, k);
 
-			for (int j = 0; j < layers[i - 1].getSize(); j++)
+			for (int j = 0; j < layers[i - 1].GetSize(); j++)
 			{
-				double valuey = (f * g * layers[i].getLayer()[k]->getWeight(j));
-				if (i > 1)y[i - 1].add(valuey, 0, j);
-				w[i].add(-1.0f * (f * g * layers[i - 1].getLayer()[j]->getValue()), j, k);
+				double value{ (f * g * layers[i].GetLayer()[k]->GetWeight(j)) };
+				if (i > 1) neuronsValues[i - 1].Add(value, 0, j);
+				w[i].Add(-1.0f * (f * g * layers[i - 1].GetLayer()[j]->GetValue()), j, k);
 			}
 		}
 	}
 
-	delete[] y;
+	delete[] neuronsValues;
 }
 
-PictureMatrix* Network::getPicture()
+PictureMatrix* Network::GetPicture()
 {
-	input.next();
-	return input.get();
+	input.Next();
+	return input.Get();
 }
 
-void Network::calculate(int loops)
+void Network::Calculate(int loops)
 {
 	for (int i = 0; i < loops; i++)
 	{
-		calculateTurn();	
+		CalculateTurn();	
 	}
-	//save function to check test examples
+	// save only while training
 	//save();
-	std::cout << "correctness rate: " << results / (LOOP * loops) * 100.0f << "%";
+	std::cout << "accuracy: " << results / (batchSize * loops) * 100.0f << "%";
 }
 
 Network::~Network()

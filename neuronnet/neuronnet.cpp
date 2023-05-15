@@ -38,7 +38,11 @@ int main()
 
 	Network net(enableExtendedOutput);
 	// test 100 of 10000 to test all change 1 to 100 
-	net.calculate(numberOfBatches);
+	net.Calculate(numberOfBatches);
+
+
+	// To get the value of duration use the count()
+	// member function on the duration object
 }
 
 // todo list:

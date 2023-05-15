@@ -15,6 +15,10 @@ This project is a simple neural network written in C++, for handwritten numbers 
 [MNIST database](http://yann.lecun.com/exdb/mnist) used for training and testing
 
 
+## Technologies
+* C++20
+* Visual Studio 2022
+
 ## Network architecture
 
 Network contains 4 layers:
@@ -39,6 +43,9 @@ If extended output is chosen program will display this for every test sample:
 - visual representation of that sample
 - probability for each possible label
 
+####Example output:
+
+![example output](https://raw.github.com/MaciejSurowiec/Neural_Network/main/output_example.PNG)
 
 ### Batches
 Testing database contains 10,000 different samples, each testing batch contains 100 random samples. 

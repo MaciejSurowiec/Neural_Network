@@ -1,8 +1,8 @@
 #include "Input.h"
 
-int& chartoint(char* word, int bytes)
+int16_t Input::CharToInt(char* word, int bytes)
 {
-	int temp = 0;
+	int16_t temp{ 0 };
 
 	for (int j = 0; j < bytes; j++)
 	{
@@ -11,7 +11,7 @@ int& chartoint(char* word, int bytes)
 
 		for (int i = 0; i < 8; i++)
 		{
-			b[7 - i] = ((int)pow(2, i) & c) / (int)pow(2, i);
+			b[7 - i] = (static_cast<int>(pow(2, i)) & c) / static_cast<int>(pow(2, i));
 		}
 
 		for (int i = 0; i < 8; i++)
@@ -24,78 +24,76 @@ int& chartoint(char* word, int bytes)
 	return temp;
 }
 
-
-int& chartoint(char c)
+int16_t Input::CharToInt(char c)
 {
-	int temp = 0;
+	int16_t temp{ 0 };
 	bool b[8];
 
 	for (int i = 0; i < 8; i++)
 	{
-		temp += ((int)pow(2, i) & c);
+		temp += (static_cast<int>(pow(2, i)) & c);
 	}
 
 
 	return temp;
 }
 
-
 Input::Input()
 {
 	actual = NULL;
-	image.open(IMAGE_PATH, std::ios_base::in | std::ios_base::binary);
-	label.open(LABEL_PATH, std::ios_base::in | std::ios_base::binary);
-	//getting primary values (magic number,width,height number of items)
+	image.open(imagePath, std::ios_base::in | std::ios_base::binary);
+	label.open(labelPath, std::ios_base::in | std::ios_base::binary);
+	//getting starting values (magic number, width, height number of items)
 
 	char* f = new char[4];
-	for (int i = 0; i < 4; i++) { image>>f[i]; }
-	for (int i = 0; i < 4; i++) { label>>f[i]; }
+	for (int i = 0; i < 4; i++) { image >> f[i]; }
+	for (int i = 0; i < 4; i++) { label >> f[i]; }
 
-	for (int i = 0; i < 4; i++) { image>>f[i]; }
-	items = chartoint(f, 4);
+	for (int i = 0; i < 4; i++) { image >> f[i]; }
+	items = CharToInt(f, 4);
 
-	for (int i = 0; i < 4; i++) { label>>f[i]; }
-	items = chartoint(f, 4);
+	for (int i = 0; i < 4; i++) { label >> f[i]; }
+	items = CharToInt(f, 4);
 
-	for (int i = 0; i < 4; i++) {image>>f[i]; }
-	width = chartoint(f, 4);
+	for (int i = 0; i < 4; i++) {image >> f[i]; }
+	width = CharToInt(f, 4);
 
-	for (int i = 0; i < 4; i++) { image>>f[i]; }
-	height = chartoint(f, 4);
+	for (int i = 0; i < 4; i++) { image >> f[i]; }
+	height = CharToInt(f, 4);
 
-	conteiners = new Conteiner[items];
+	offsets = new int[items];
 	for (int i = 0; i < items; i++)
 	{
-		conteiners[i].offset = i;
+		offsets[i] = i;
 	}
-	restart();
+
+	Restart();
 }
 
-void Input::next()
+void Input::Next()
 {
-	if (position >= items)  restart(); 
+	if (position >= items)  Restart(); 
 	
-	if (actual != NULL) delete actual;
+	if (actual != nullptr) delete actual;
 
-	actual = new PictureMatrix(getImage(), getLabel());
+	actual = new PictureMatrix(GetImage(), GetLabel());
 	position++;
-	
 }
 
-PictureMatrix* Input::get() { return actual; }
+PictureMatrix* Input::Get() { return actual; }
 
-int Input::getLabel()
+int Input::GetLabel()
 {
-	label.seekg(OFFSET_LABEL+conteiners[position].offset,label.beg);
-	char c;
+	label.seekg(offsetLabel + offsets[position], label.beg);
+	char c{};
 	label.get(c);
-	return chartoint(c);
+	return CharToInt(c);
 }
 
-double** Input::getImage()
+double** Input::GetImage()
 {
-	image.seekg(OFFSET_IMAGE + conteiners[position].offset * WIDTH * HEIGHT, image.beg);
-	char c=0;
+	image.seekg(offsetImage + offsets[position] * pow(PictureMatrix::size, 2), image.beg);
+	char c{0};
 
 	double** img = new double* [width];
 	for (int i = 0; i < width; i++) img[i] = new double[height];
@@ -105,7 +103,7 @@ double** Input::getImage()
 		for (int x = 0; x < width; x++)
 		{
 			image.get(c);
-			img[x][y] = chartoint(c) / 255.0f;
+			img[x][y] = CharToInt(c) / maxValue;
 		}
 	}
 
@@ -119,15 +117,14 @@ Input::~Input()
 	delete actual;
 }
 
-void Input::restart()
-{
-	//array shufle
+void Input::Restart()
+{ //array shufle
 	position = 0;
-	time_t tim;
-	srand(time(&tim));
+	time_t t;
+	srand(time(&t));
 	
-	for (int i=0;i<items;i++)
+	for (int i = 0; i < items; i++)
 	{
-		std::swap(conteiners[i], conteiners[rand() % items]);
+		std::swap(offsets[i], offsets[rand() % items]);
 	}
 }
