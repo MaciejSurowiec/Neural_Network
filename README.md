@@ -13,12 +13,14 @@
 ## General info
 
 This project is a simple neural network written in C++, for handwritten numbers recognition.
-[MNIST database](http://yann.lecun.com/exdb/mnist) used for training and testing
+[MNIST database](http://yann.lecun.com/exdb/mnist) used for training and testing. Simple GUI 
 
 
 ## Technologies
 * C++20
 * Visual Studio 2022
+* Qt 6
+* CMake
 
 ## Network architecture
 
@@ -32,26 +34,15 @@ Every layer in the network is dense, and uses the Sigmoid Activation function.
 
 ## Usage 
 
-To run this project, compile it using Visual Studio.
-For now user Interface is simple and contains 2 options:
-- extended or simple output
-- how many batches to calculate
+To run this project, build it using CMake. Then run the neuralnetwork executable.
 
-
-### Extended Output
-If extended output is chosen program will display this for every test sample:
-- label (number from 0 to 9)
-- visual representation of that sample
-- probability for each possible label
 
 #### Example output:
+The white area on the left allows you to draw numbers. On the right, there are two buttons: one clears the drawing area, and the other runs the drawn number through the neural network and displays the result on the label below.
 
-![example output](https://raw.github.com/MaciejSurowiec/Neural_Network/master/output_example.PNG)
+![example gui](/examples/gui.PNG)
 
-### Batches
-Testing database contains 10,000 different samples, each testing batch contains 100 random samples. 
-Users can choose from 1 to 100 batches.
-
+![example gui 2](/examples/gui2.PNG)
 
 ## Results 
 Acuracy for whole MNIST test dataset - 95.23%
