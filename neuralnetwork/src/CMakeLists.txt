@@ -1,4 +1,4 @@
-﻿add_executable(${PROJECT_NAME} SHARED
+﻿add_executable(${PROJECT_NAME}
 	main.cpp
 	gui.h
 	gui.cpp
