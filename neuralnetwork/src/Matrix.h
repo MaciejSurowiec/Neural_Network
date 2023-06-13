@@ -1,5 +1,6 @@
 #pragma once
 #include <numbers>
+#include <cmath>
 
 class Matrix
 {

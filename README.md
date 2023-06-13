@@ -13,7 +13,7 @@
 ## General info
 
 This project is a simple neural network written in C++, for handwritten numbers recognition.
-[MNIST database](http://yann.lecun.com/exdb/mnist) used for training and testing. Simple GUI 
+[MNIST database](http://yann.lecun.com/exdb/mnist) used for training and testing. Simple GUI allows to test network by drawing examples. Works on Windows and Linux.
 
 
 ## Technologies
@@ -47,9 +47,10 @@ The white area on the left allows you to draw numbers. On the right, there are t
 ## Results 
 Acuracy for whole MNIST test dataset - 95.23%
 
+Acuracy for drawn numbers works well, but only when number is drawn in center.
 
 ## to do
-- refactor and made it more modern
+- algorithm to center drawn number
 - create interface for learning 
 - improve accuracy
 

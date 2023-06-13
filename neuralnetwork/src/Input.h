@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <time.h>
+#include <cmath>
+
 #include "PictureMatrix.h"
 
 class Input

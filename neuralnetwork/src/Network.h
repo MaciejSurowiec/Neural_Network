@@ -6,6 +6,7 @@
 #include <numbers>
 #include <string>
 #include <iomanip>
+#include <cmath>
 
 #include "Layer.h"
 #include "PictureMatrix.h"

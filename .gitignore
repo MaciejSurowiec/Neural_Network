@@ -11,6 +11,9 @@
 *.proj.filters
 mocs_compilation*
 neuralnetwork_autogen
+/build/*
+/.idea
+
 # User-specific files
 *.rsuser
 *.suo
@@ -18,6 +21,11 @@ neuralnetwork_autogen
 *.userosscache
 *.sln.docstates
 *.sln
+*.xml
+*.json
+*v2
+*v1
+/.vscode
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

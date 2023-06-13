@@ -1,5 +1,6 @@
-﻿cmake_minimum_required(VERSION 3.24)
+﻿cmake_minimum_required(VERSION 3.22)
 set (CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(neuralnetwork)
 
@@ -14,4 +15,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 add_subdirectory(src)
 
+
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Gui)

@@ -9,7 +9,7 @@
 #include <QPainter>
 #include <QBuffer>
 #include <QPen>
-#include <QRGB>
+#include <QColor>
 #include <fstream>
 #include "ui_gui.h"
 

@@ -2,6 +2,7 @@
 #define NEURON_H
 #include <iostream>
 #include <numbers>
+#include <cmath>
 
 class Neuron
 {

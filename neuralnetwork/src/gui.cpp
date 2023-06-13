@@ -18,21 +18,21 @@ void gui::mouseMoveEvent(QMouseEvent* e)
     if (!isMouseActive)
     {
         isMouseActive = true;
-        lastX = e->x();
-        lastY = e->y();
+        lastX = e->position().x();
+        lastY = e->position().y();
         return;
     }
 
 
     QPainter painter = QPainter(canvas);
     painter.setPen(QPen(Qt::black, 28));
-    painter.drawLine(lastX, lastY, e->x(), e->y());
+    painter.drawLine(lastX, lastY, e->position().x(), e->position().y());
     painter.end();
 
     ui.canvasLabel->setPixmap(*canvas);
 
-    lastX = e->x();
-    lastY = e->y();
+    lastX = e->position().x();
+    lastY = e->position().y();
 }
 
 void gui::mouseReleaseEvent(QMouseEvent* e)
