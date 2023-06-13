@@ -9,9 +9,10 @@ class Input
 {
 	std::fstream image;
 	std::fstream label;
-	PictureMatrix* actual;
+	PictureMatrix* current;
 	int items, width, height, position;
 	int* offsets;
+
 	int GetLabel();
 	double** GetImage();
 	void Restart();

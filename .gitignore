@@ -3,12 +3,21 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+*/.qt
+
+*.vcxproj
+*.vcxproj.filters
+*.proj
+*.proj.filters
+mocs_compilation*
+neuralnetwork_autogen
 # User-specific files
 *.rsuser
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -396,3 +405,17 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+
+# CMake Files
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps

@@ -9,18 +9,9 @@
 	Matrix.h
 	Matrix.cpp
 	Layer.cpp
+	Layer.h
 	PictureMatrix.h
 	PictureMatrix.cpp
 	Input.h
 	Input.cpp
 )
-
-
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
-
-#set taget
-
-#add config to copy to target
-
-# add qt 
-

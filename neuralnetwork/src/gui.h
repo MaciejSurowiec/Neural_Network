@@ -34,10 +34,8 @@ private:
 
     int lastX, lastY;
     bool isMouseActive = false;
-
+    Network net = Network(false);
 
     void clear();
     void submit();
-
-
 };

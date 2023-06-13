@@ -168,7 +168,7 @@ double* Matrix::operator[](int indeks) {  return matrix[indeks]; }
 Matrix::~Matrix() 
 {
 
-	for (int i=0;i<size_x;i++)
+	for (int i = 0; i < size_x; i++)
 	{
 		delete[] matrix[i];
 	}

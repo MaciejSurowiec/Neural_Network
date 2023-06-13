@@ -34,13 +34,12 @@ int16_t Input::CharToInt(char c)
 		temp += (static_cast<int>(pow(2, i)) & c);
 	}
 
-
 	return temp;
 }
 
 Input::Input()
 {
-	actual = NULL;
+	current = NULL;
 	image.open(imagePath, std::ios_base::in | std::ios_base::binary);
 	label.open(labelPath, std::ios_base::in | std::ios_base::binary);
 	//getting starting values (magic number, width, height number of items)
@@ -74,13 +73,13 @@ void Input::Next()
 {
 	if (position >= items)  Restart(); 
 	
-	if (actual != nullptr) delete actual;
+	if (current != nullptr) delete current;
 
-	actual = new PictureMatrix(GetImage(), GetLabel());
+	current = new PictureMatrix(GetImage(), GetLabel());
 	position++;
 }
 
-PictureMatrix* Input::Get() { return actual; }
+PictureMatrix* Input::Get() { return current; }
 
 int Input::GetLabel()
 {
@@ -114,7 +113,8 @@ Input::~Input()
 {
 	image.close();
 	label.close();
-	delete actual;
+	delete current;
+	delete[] offsets;
 }
 
 void Input::Restart()

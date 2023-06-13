@@ -52,7 +52,6 @@ void gui::clear()
 void gui::submit()
 {
     QImage image = ui.canvasLabel->pixmap().toImage();
-    
     double** arr = new double*[448];
     for (int i = 0; i < 448; i++)
     {
@@ -101,9 +100,8 @@ void gui::submit()
     }
     
     PictureMatrix p = PictureMatrix(input, 0);
-    Network net(false);
     ui.textLabel->setText(QString::number(net.Calculate(p)));
-    
+
     for (int i = 0; i < 448; i++)
     {
         delete[] arr[i];

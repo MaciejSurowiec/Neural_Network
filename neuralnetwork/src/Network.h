@@ -18,21 +18,22 @@ private:
 	Layer* layers;
 	std::fstream config;
 	Input input;
-	void CalculateTurn();
 	int results;
 	bool enableExtendedOutput;
-	void Save();
-	void CreateNewNetwork();
-	bool Load();
-	void Learn(Matrix learn, Matrix* weights, Matrix* bias);
-	PictureMatrix* GetPicture();
 	const std::string pathToConfig{ "../Config.txt" };
 	static constexpr int networkSize{ 4 };
 	static constexpr int hiddenLayerSize{ 16 };
 	static constexpr int inputLayer{ 0 };
 	static constexpr int outputSize{ 10 };
-	static constexpr int outputLayer{networkSize - 1};
+	static constexpr int outputLayer{ networkSize - 1 };
 	static constexpr double batchSize{ 100.0f };
+
+	void CalculateTurn();
+	void Save();
+	void CreateNewNetwork();
+	bool Load();
+	void Learn(Matrix learn, Matrix* weights, Matrix* bias);
+	PictureMatrix* GetPicture();
 	bool isFileExist();
 
 public:
